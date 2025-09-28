@@ -1,8 +1,13 @@
-import { createClient } from '@/utils/supabase/server-props';
+import { redirect } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server'
 
 export default async function Dashboard() {
-  const supabase = await createClient();
-  const { data: instruments } = await supabase.from("ptest").select();
+  const supabase = await createClient()
 
-  return <pre>{JSON.stringify(instruments, null, 2)}</pre>
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/login')
+  }
+
+  return <p>Hello {data.user.email}</p>
 }
