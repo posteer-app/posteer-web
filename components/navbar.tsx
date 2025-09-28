@@ -20,7 +20,7 @@ export default async function Navbar() {
           Dashboard
         </Link>
       </div>
-      <div>
+      <div className="flex items-center space-x-4 flex-row">
         <DarkModeToggle />
         {user ? (
           <form action={signOut}>
@@ -29,7 +29,7 @@ export default async function Navbar() {
             </Button>
           </form>
         ) : (
-          <Button asChild>
+          <Button>
             <Link href="/login">Login</Link>
           </Button>
         )}
