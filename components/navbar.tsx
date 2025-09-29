@@ -19,8 +19,17 @@ export default async function Navbar() {
   } = await supabase.auth.getUser()
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-background/80 backdrop-blur-md">
-      <nav className="flex items-center justify-between px-3 py-3 bg-card border border-border rounded-xl">
+    <div className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+      {/* Blur background layer with fade-out */}
+      <div
+        className="absolute inset-0 bg-background/80 backdrop-blur-lg"
+        style={{
+          mask: 'linear-gradient(to bottom, black 0%, black 0%, transparent 100%)',
+          WebkitMask: 'linear-gradient(to bottom, black 0%, black 0%, transparent 100%)'
+        }}
+      />
+      {/* Navbar content - always fully opaque */}
+      <nav className="relative flex items-center justify-between px-3 py-3 bg-card border border-border rounded-xl">
         <div className="flex items-center space-x-3">
           <Button asChild variant="ghost" className="">
             <Link href="/" className="flex items-center space-x-1 text-md font-semibold text-foreground">

@@ -33,6 +33,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {/* Full-screen gradient background */}
+          <div className="fixed inset-0 bg-gradient-to-br from-background via-muted/30 to-muted/60 -z-10" />
           <Navbar />
           {children}
         </ThemeProvider>

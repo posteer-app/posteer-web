@@ -9,5 +9,5 @@ export default async function Dashboard() {
     redirect('/login')
   }
 
-  return <p>Hello {data.user.email}</p>
+  return <p className='mt-[8rem]'>Hello {data.user.email}</p>
 }
