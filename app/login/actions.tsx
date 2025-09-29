@@ -12,12 +12,13 @@ export async function magicLinkLogin(formData: FormData) {
   // in practice, you should validate your inputs
   const data = {
     email: formData.get('email') as string,
+    origin: formData.get('origin') as string,
   }
 
   const { error } = await supabase.auth.signInWithOtp({
     email: data.email,
     options: {
-      emailRedirectTo: 'http://localhost:3000/auth/confirm',
+      emailRedirectTo: `${data.origin}/auth/google-callback`,
     },
   })
 
@@ -28,13 +29,13 @@ export async function magicLinkLogin(formData: FormData) {
   redirect('/auth/magic-link-sent')
 }
 
-export async function googleLogin() {
+export async function googleLogin(origin: string) {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'http://localhost:3000/auth/google-callback',
+      redirectTo: `${origin}/auth/google-callback`,
     },
   })
 

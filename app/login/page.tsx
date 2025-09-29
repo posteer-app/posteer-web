@@ -14,10 +14,17 @@ import { magicLinkLogin, googleLogin, facebookLogin } from "./actions"
 export default function LoginPage() {
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false)
   const [isFacebookLoading, setIsFacebookLoading] = React.useState<boolean>(false)
+  const [origin, setOrigin] = React.useState<string>('')
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin)
+    }
+  }, []);
 
   async function onGoogleSignIn() {
     setIsGoogleLoading(true)
-    googleLogin()
+    googleLogin(window.location.origin)
   }
 
   async function onFacebookSignIn() {
@@ -49,6 +56,13 @@ export default function LoginPage() {
                     placeholder="me@example.com"
                     required
                     disabled={isGoogleLoading || isFacebookLoading}
+                  />
+                  <Input
+                    name="origin"
+                    id="origin"
+                    value={origin}
+                    className="hidden"
+                    readOnly
                   />
                 </div>
                 <MagicLinkButton />

@@ -14,9 +14,7 @@ export default function Home() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary/70 to-primary/40 bg-clip-text text-transparent">
-                  Steer your business' socials
-                  <br />
-                  yourself in <span className="text-foreground">one place</span>
+                  Steer your business' <br className="sm:hidden"/>socials<br className="hidden sm:block"/> yourself <br className="sm:hidden"/>in <span className="text-foreground">one place</span>
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
