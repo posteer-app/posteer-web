@@ -9,35 +9,26 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/ui/icons"
-import { login } from "./actions"
+import { magicLinkLogin, googleLogin, facebookLogin } from "./actions"
 
 export default function LoginPage() {
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false)
   const [isFacebookLoading, setIsFacebookLoading] = React.useState<boolean>(false)
 
-  async function onGoogleSignIn(event: React.SyntheticEvent) {
-    event.preventDefault()
+  async function onGoogleSignIn() {
     setIsGoogleLoading(true)
-    // Simulate API call
-    setTimeout(() => {
-      setIsGoogleLoading(false)
-    }, 3000)
+    googleLogin()
   }
 
-  async function onFacebookSignIn(event: React.SyntheticEvent) {
-    event.preventDefault()
+  async function onFacebookSignIn() {
     setIsFacebookLoading(true)
-    // Simulate API call
-    setTimeout(() => {
-      setIsFacebookLoading(false)
-    }, 3000)
   }
 
   return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="w-full max-w-sm">
         <div className={cn("flex flex-col gap-6")}>
-          <form action={login}>
+          <form action={magicLinkLogin}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center gap-2">
                 <a
@@ -50,6 +41,25 @@ export default function LoginPage() {
                   <span className="sr-only">Posteer</span>
                 </a>
                 <h1 className="text-2xl font-bold">Welcome to Posteer</h1>
+              </div>
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-3">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    name="email"
+                    id="email"
+                    type="email"
+                    placeholder="me@example.com"
+                    required
+                    disabled={isGoogleLoading || isFacebookLoading}
+                  />
+                </div>
+                <MagicLinkButton />
+              </div>
+              <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                <span className="bg-background text-muted-foreground relative z-10 px-2 text-xs">
+                  or continue with
+                </span>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Button
@@ -69,7 +79,7 @@ export default function LoginPage() {
                       />
                     </svg>
                   )}
-                  Continue with Google
+                  Google
                 </Button>
                 <Button
                   variant="outline"
@@ -88,27 +98,8 @@ export default function LoginPage() {
                       />
                     </svg>
                   )}
-                  Continue with Facebook
+                  Facebook
                 </Button>
-              </div>
-              <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                <span className="bg-background text-muted-foreground relative z-10 px-2 text-xs">
-                  OR CONTINUE WITH
-                </span>
-              </div>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-3">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    name="email"
-                    id="email"
-                    type="email"
-                    placeholder="me@example.com"
-                    required
-                    disabled={isGoogleLoading || isFacebookLoading}
-                  />
-                </div>
-                <MagicLinkButton />
               </div>
             </div>
           </form>

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
 
-export async function login(formData: FormData) {
+export async function magicLinkLogin(formData: FormData) {
   const supabase = await createClient()
 
   // type-casting here for convenience
@@ -26,6 +26,31 @@ export async function login(formData: FormData) {
   }
 
   redirect('/auth/magic-link-sent')
+}
+
+export async function googleLogin() {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'http://localhost:3000/auth/google-callback',
+    },
+  })
+
+  if (error) {
+    redirect('/error')
+  }
+
+  // If data.url exists, it means Supabase is redirecting to the OAuth provider
+  // Otherwise, if data.session exists, the user is already logged in or the OAuth flow completed directly
+  if (data.url) {
+    redirect(data.url)
+  }
+}
+
+export async function facebookLogin() {
+  // TODO: Implement Facebook login
 }
 
 export async function signOut() {
