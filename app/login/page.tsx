@@ -35,9 +35,6 @@ export default function LoginPage() {
                   href="#"
                   className="flex flex-col items-center gap-2 font-medium"
                 >
-                  <div className="flex size-8 items-center justify-center rounded-md">
-                    <GalleryVerticalEnd className="size-6" />
-                  </div>
                   <span className="sr-only">Posteer</span>
                 </a>
                 <h1 className="text-2xl font-bold">Welcome to Posteer</h1>
