@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
-import { createClient } from '@/utils/supabase/server'
+import { usePathname } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client'
 import { signOut } from '@/app/login/actions'
 import { Button } from './ui/button'
 import { DarkModeToggle } from './dark-mode-toggle'
@@ -11,15 +14,38 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
+import { useEffect, useState } from 'react'
+import { User } from '@supabase/supabase-js'
 
-export default async function Navbar() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+export default function Navbar() {
+  const pathname = usePathname()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    const supabase = createClient()
+    
+    // Get initial user
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setLoading(false)
+    }
+    
+    getUser()
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+    
+    return () => subscription.unsubscribe()
+  }, [])
+  
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+    <div className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
       {/* Blur background layer with fade-out */}
       <div
         className="absolute inset-0 bg-background/80 backdrop-blur-lg"
@@ -37,7 +63,7 @@ export default async function Navbar() {
               <span className='mb-[0.1rem]'>posteer</span>
             </Link>
           </Button>
-          {user && (
+          {(user && !pathname?.includes("dashboard")) && (
             <div className="flex items-center space-x-2">
               <Link
                 href="/dashboard"
@@ -50,7 +76,9 @@ export default async function Navbar() {
         </div>
         <div className="flex items-center space-x-3">
           <DarkModeToggle />
-          {user ? (
+          {loading ? (
+            <div className="w-10 h-10 bg-muted animate-pulse rounded-md" />
+          ) : user ? (
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

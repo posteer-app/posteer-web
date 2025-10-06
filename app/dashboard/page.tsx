@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import Sidebar from '@/components/dashboard/sidebar'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -9,5 +10,12 @@ export default async function Dashboard() {
     redirect('/login')
   }
 
-  return <p className='mt-[8rem]'>Hello {data.user.email}</p>
+  return (
+    <div className="flex">
+      {/* <Sidebar /> */}
+      <main className=" p-8 mt-[4rem]">
+        <p>Hello {data.user.email}</p>
+      </main>
+    </div>
+  )
 }
