@@ -17,6 +17,7 @@ import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Combobox } from './navbar/combobox'
+import { toast } from "sonner"
 
 interface Business {
   value: string
@@ -28,7 +29,6 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null)
   const [businessOptions, setBusinessOptions] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
     const supabase = createClient()
@@ -44,7 +44,6 @@ export default function Navbar() {
     }
     
     const fetchUserBusinesses = async () => {
-      setError(null)
       try {
         // bc of rls, selecting all will only return those that are owned by user
         const { data, error } = await supabase
@@ -62,14 +61,13 @@ export default function Navbar() {
           label: business.name,
         })))
       } catch (err: any) {
-        console.error('Error fetching businesses:', err.message)
-        setError(err.message || 'Failed to fetch businesses')
+        toast('Error fetching businesses:', err.message)
       }
     };
     
+    
     getUser()
   }, [])
-  
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 px-4 py-4">

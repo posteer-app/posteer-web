@@ -50,7 +50,7 @@ export function Combobox({ businesses }: ComboboxProps) {
         <Command>
           <CommandInput placeholder="find business..." />
           <CommandList>
-            <CommandEmpty>No business found.</CommandEmpty>
+            <CommandEmpty>no business found</CommandEmpty>
             <CommandGroup>
               {businesses?.map((business) => (
                 <CommandItem
