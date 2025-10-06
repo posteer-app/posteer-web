@@ -20,30 +20,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+interface ComboboxProps {
+  businesses?: {
+    value: string,
+    label: string
+  }[]
+}
 
-export function Combobox() {
+export function Combobox({ businesses }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -57,7 +41,7 @@ export function Combobox() {
           className={`justify-between ${!value ? "text-muted-foreground": ""}`}
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+            ? businesses?.find((business) => business.value === value)?.label
             : "select business"}
           <ChevronsUpDownIcon className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -66,12 +50,12 @@ export function Combobox() {
         <Command>
           <CommandInput placeholder="find business..." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No business found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {businesses?.map((business) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={business.value}
+                  value={business.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
@@ -80,10 +64,10 @@ export function Combobox() {
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === business.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {framework.label}
+                  {business.label}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -94,12 +78,12 @@ export function Combobox() {
                 value="new"
                 onSelect={() => {
                   // handle create-new flow
-                  console.log("Create new project");
+                  console.log("create new business");
                   setOpen(false);
                 }}
               >
                 <Plus className="mr-2 h-4 w-4" />
-                New project
+                new business
               </CommandItem>
             </CommandGroup>
           </CommandList>

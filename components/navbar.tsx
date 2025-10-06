@@ -18,10 +18,17 @@ import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Combobox } from './navbar/combobox'
 
+interface Business {
+  value: string
+  label: string
+}
+
 export default function Navbar() {
   const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null)
+  const [businessOptions, setBusinessOptions] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
     const supabase = createClient()
@@ -30,16 +37,37 @@ export default function Navbar() {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setLoading(false)
+      
+      if (user) {
+        await fetchUserBusinesses()
+      }
     }
     
+    const fetchUserBusinesses = async () => {
+      setError(null)
+      try {
+        // bc of rls, selecting all will only return those that are owned by user
+        const { data, error } = await supabase
+          .from('businesses')
+          .select('*')
+
+        if (error) {
+          throw error
+        }
+
+        console.log("fetched!!")
+
+        setBusinessOptions(data.map((business) => ({
+          value: business.id,
+          label: business.name,
+        })))
+      } catch (err: any) {
+        console.error('Error fetching businesses:', err.message)
+        setError(err.message || 'Failed to fetch businesses')
+      }
+    };
+    
     getUser()
-    
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-    
-    return () => subscription.unsubscribe()
   }, [])
   
 
@@ -72,7 +100,7 @@ export default function Navbar() {
               </Link>
             </div>
           ) : (
-            <Combobox />
+            <Combobox businesses={businessOptions} />
           )}
         </div>
         <div className="flex items-center space-x-3">
