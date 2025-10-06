@@ -16,6 +16,7 @@ import {
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
+import { Combobox } from './navbar/combobox'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -25,7 +26,6 @@ export default function Navbar() {
   useEffect(() => {
     const supabase = createClient()
     
-    // Get initial user
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
@@ -34,7 +34,6 @@ export default function Navbar() {
     
     getUser()
     
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
       setLoading(false)
@@ -63,7 +62,7 @@ export default function Navbar() {
               <span className='mb-[0.1rem]'>posteer</span>
             </Link>
           </Button>
-          {(user && !pathname?.includes("dashboard")) && (
+          {(user && !pathname?.includes("dashboard")) ? (
             <div className="flex items-center space-x-2">
               <Link
                 href="/dashboard"
@@ -72,6 +71,8 @@ export default function Navbar() {
                 Dashboard
               </Link>
             </div>
+          ) : (
+            <Combobox />
           )}
         </div>
         <div className="flex items-center space-x-3">
