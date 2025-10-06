@@ -22,14 +22,19 @@ import {
 
 interface ComboboxProps {
   profiles?: {
-    value: string,
-    label: string
+    uuid: string,
+    name: string
   }[]
 }
 
 export function Combobox({ profiles }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [selectedUuid, setSelectedUuid] = React.useState("")
+
+  function onChangeProfile(profileUuid: string) {
+    setSelectedUuid(profileUuid === selectedUuid ? "" : profileUuid)
+    setOpen(false)
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -38,10 +43,10 @@ export function Combobox({ profiles }: ComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`justify-between ${!value ? "text-muted-foreground": ""}`}
+          className={`justify-between ${!selectedUuid ? "text-muted-foreground": ""}`}
         >
-          {value
-            ? profiles?.find((profile) => profile.label === value)?.label
+          {selectedUuid
+            ? profiles?.find((profile) => profile.uuid === selectedUuid)?.name
             : "select profile"}
           <ChevronsUpDownIcon className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -54,20 +59,17 @@ export function Combobox({ profiles }: ComboboxProps) {
             <CommandGroup>
               {profiles?.map((profile) => (
                 <CommandItem
-                  key={profile.value}
-                  value={profile.label}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
+                  key={profile.uuid}
+                  value={profile.uuid}
+                  onSelect={() => onChangeProfile(profile.uuid)}
                 >
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === profile.label ? "opacity-100" : "opacity-0"
+                      selectedUuid === profile.uuid ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {profile.label}
+                  {profile.name || `Profile ${profile.uuid.slice(0, 8)}`}
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -13,15 +13,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Combobox } from './navbar/combobox'
 import { toast } from "sonner"
 
 interface Profile {
-  value: string
-  label: string
+  uuid: string
+  name: string
 }
 
 export default function Navbar() {
@@ -54,11 +53,9 @@ export default function Navbar() {
           throw error
         }
 
-        console.log("fetched!!")
-
         setProfileOptions(data.map((profile) => ({
-          value: profile.id,
-          label: profile.name,
+          uuid: profile.id,
+          name: profile.name,
         })))
       } catch (err: any) {
         toast('Error fetching profiles:', err.message)
