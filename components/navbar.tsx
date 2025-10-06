@@ -104,6 +104,11 @@ export default function Navbar() {
             <div className="w-10 h-10 bg-muted animate-pulse rounded-md" />
           ) : user ? (
             <>
+              <Button variant="outline" size="icon" asChild>
+                <Link href="/dashboard/settings">
+                  <Icons.settings className="h-4 w-4" />
+                </Link>
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">
