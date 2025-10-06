@@ -2,12 +2,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { 
+import {
   Trash2,
 } from 'lucide-react'
 import { Icons } from '@/components/ui/icons'
+import { useCurrentProfile } from '@/utils/profile'
 
 export default function SettingsPage() {
+  const currentProfile = useCurrentProfile()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-muted/60">
@@ -15,7 +17,7 @@ export default function SettingsPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <h2 className="text-muted-foreground">for profile: {JSON.parse(localStorage.getItem("profile") || '{"name":"error"}').name}</h2>
+          <h2 className="text-muted-foreground">for profile: {currentProfile?.name || 'No profile selected'}</h2>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">

@@ -17,11 +17,7 @@ import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Combobox } from './navbar/combobox'
 import { toast } from "sonner"
-
-interface Profile {
-  uuid: string
-  name: string
-}
+import { getProfiles, getCurrentProfile, setCurrentProfile, Profile } from '@/utils/profile'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -44,24 +40,12 @@ export default function Navbar() {
     
     const fetchUserProfiles = async () => {
       try {
-        // bc of rls, selecting all will only return those that are owned by user
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-
-        if (error) {
-          throw error
-        }
-
-        setProfileOptions(data.map((profile) => ({
-          uuid: profile.id,
-          name: profile.name,
-        })))
+        const profiles = await getProfiles()
+        setProfileOptions(profiles)
       } catch (err: any) {
-        toast('Error fetching profiles:', err.message)
+        toast.error('Error fetching profiles: ' + err.message)
       }
-    };
-    
+    }
     
     getUser()
   }, [])

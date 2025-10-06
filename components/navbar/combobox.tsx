@@ -19,20 +19,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { setCurrentProfile, Profile, useCurrentProfile } from "@/utils/profile"
 
 interface ComboboxProps {
-  profiles?: {
-    uuid: string,
-    name: string
-  }[]
+  profiles?: Profile[]
 }
 
 export function Combobox({ profiles }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [selectedUuid, setSelectedUuid] = React.useState("")
+  const currentProfile = useCurrentProfile()
+  const selectedUuid = currentProfile?.uuid || ""
 
   function onChangeProfile(profileUuid: string) {
-    setSelectedUuid(profileUuid === selectedUuid ? "" : profileUuid)
+    const profile = profiles?.find(p => p.uuid === profileUuid)
+    if (profile) {
+      setCurrentProfile(profile)
+    }
     setOpen(false)
   }
 
