@@ -21,13 +21,13 @@ import {
 } from "@/components/ui/popover"
 
 interface ComboboxProps {
-  businesses?: {
+  profiles?: {
     value: string,
     label: string
   }[]
 }
 
-export function Combobox({ businesses }: ComboboxProps) {
+export function Combobox({ profiles }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -41,21 +41,21 @@ export function Combobox({ businesses }: ComboboxProps) {
           className={`justify-between ${!value ? "text-muted-foreground": ""}`}
         >
           {value
-            ? businesses?.find((business) => business.value === value)?.label
-            : "select business"}
+            ? profiles?.find((profile) => profile.label === value)?.label
+            : "select profile"}
           <ChevronsUpDownIcon className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="find business..." />
+          <CommandInput placeholder="find profile..." />
           <CommandList>
-            <CommandEmpty>no business found</CommandEmpty>
+            <CommandEmpty>no profile found</CommandEmpty>
             <CommandGroup>
-              {businesses?.map((business) => (
+              {profiles?.map((profile) => (
                 <CommandItem
-                  key={business.value}
-                  value={business.value}
+                  key={profile.value}
+                  value={profile.label}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
@@ -64,10 +64,10 @@ export function Combobox({ businesses }: ComboboxProps) {
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === business.value ? "opacity-100" : "opacity-0"
+                      value === profile.label ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {business.label}
+                  {profile.label}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -78,12 +78,12 @@ export function Combobox({ businesses }: ComboboxProps) {
                 value="new"
                 onSelect={() => {
                   // handle create-new flow
-                  console.log("create new business");
+                  console.log("create new profile");
                   setOpen(false);
                 }}
               >
                 <Plus className="mr-2 h-4 w-4" />
-                new business
+                new profile
               </CommandItem>
             </CommandGroup>
           </CommandList>

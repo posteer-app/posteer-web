@@ -14,7 +14,7 @@ export default function Home() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary/70 to-primary/40 bg-clip-text text-transparent">
-                  Steer your business' <br className="sm:hidden"/>socials<br className="hidden sm:block"/> yourself <br className="sm:hidden"/>in <span className="text-foreground">one place</span>
+                  Steer your profile's <br className="sm:hidden"/>socials<br className="hidden sm:block"/> yourself <br className="sm:hidden"/>in <span className="text-foreground">one place</span>
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -60,7 +60,7 @@ export default function Home() {
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-3xl md:text-4xl font-bold">Everything you need to manage your socials</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Streamline your social media workflow, designed for small businesses
+              Streamline your social media workflow, designed for small profiles
             </p>
           </div>
 

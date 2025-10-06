@@ -19,7 +19,7 @@ import { User } from '@supabase/supabase-js'
 import { Combobox } from './navbar/combobox'
 import { toast } from "sonner"
 
-interface Business {
+interface Profile {
   value: string
   label: string
 }
@@ -27,7 +27,7 @@ interface Business {
 export default function Navbar() {
   const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null)
-  const [businessOptions, setBusinessOptions] = useState<Business[]>([])
+  const [profileOptions, setProfileOptions] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   
   useEffect(() => {
@@ -39,15 +39,15 @@ export default function Navbar() {
       setLoading(false)
       
       if (user) {
-        await fetchUserBusinesses()
+        await fetchUserProfiles()
       }
     }
     
-    const fetchUserBusinesses = async () => {
+    const fetchUserProfiles = async () => {
       try {
         // bc of rls, selecting all will only return those that are owned by user
         const { data, error } = await supabase
-          .from('businesses')
+          .from('profiles')
           .select('*')
 
         if (error) {
@@ -56,12 +56,12 @@ export default function Navbar() {
 
         console.log("fetched!!")
 
-        setBusinessOptions(data.map((business) => ({
-          value: business.id,
-          label: business.name,
+        setProfileOptions(data.map((profile) => ({
+          value: profile.id,
+          label: profile.name,
         })))
       } catch (err: any) {
-        toast('Error fetching businesses:', err.message)
+        toast('Error fetching profiles:', err.message)
       }
     };
     
@@ -98,7 +98,7 @@ export default function Navbar() {
               </Link>
             </div>
           ) : (
-            <Combobox businesses={businessOptions} />
+            <Combobox profiles={profileOptions} />
           )}
         </div>
         <div className="flex items-center space-x-3">

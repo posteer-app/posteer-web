@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "posteer",
-  description: "steer your business' socials in one place",
+  description: "steer your profile's socials in one place",
 };
 
 export default function RootLayout({
