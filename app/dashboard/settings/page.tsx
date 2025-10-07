@@ -7,6 +7,11 @@ import {
 } from 'lucide-react'
 import { Icons } from '@/components/ui/icons'
 import { useCurrentProfile } from '@/utils/profile'
+import {
+  Dialog,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import DeleteProfileForm from '@/components/dashboard/settings/deleteProfileForm'
 
 export default function SettingsPage() {
   const currentProfile = useCurrentProfile()
@@ -65,10 +70,15 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2"> 
-                  <Button variant="destructive" className="w-full">
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Profile  
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="destructive" className="w-full">
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete Profile  
+                      </Button>
+                    </DialogTrigger>
+                    <DeleteProfileForm />
+                  </Dialog>
                 </div>
               </CardContent>
             </Card>

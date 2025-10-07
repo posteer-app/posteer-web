@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Combobox } from './navbar/combobox'
 import { toast } from "sonner"
-import { getProfiles, getCurrentProfile, setCurrentProfile, Profile } from '@/utils/profile'
+import { getProfiles, Profile } from '@/utils/profile'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -79,7 +79,14 @@ export default function Navbar() {
               </Link>
             </div>
           ) : (
-            <Combobox profiles={profileOptions} />
+            <>
+              <Combobox profiles={profileOptions} />
+              <Button variant="outline" size="icon" asChild>
+                <Link href="/dashboard/settings">
+                  <Icons.settings className="h-4 w-4" />
+                </Link>
+              </Button>
+            </>
           )}
         </div>
         <div className="flex items-center space-x-3">
@@ -88,11 +95,6 @@ export default function Navbar() {
             <div className="w-10 h-10 bg-muted animate-pulse rounded-md" />
           ) : user ? (
             <>
-              <Button variant="outline" size="icon" asChild>
-                <Link href="/dashboard/settings">
-                  <Icons.settings className="h-4 w-4" />
-                </Link>
-              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">
