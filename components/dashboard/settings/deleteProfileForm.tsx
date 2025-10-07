@@ -7,10 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useCurrentProfile } from "@/utils/profile"
 import { createClient } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -18,6 +20,8 @@ export default function deleteProfileForm(){
     const profile = useCurrentProfile()
     const [input, setInput] = useState("")
     const supabase = createClient()
+    const router = useRouter()
+    const [isNavigating, setIsNavigating] = useState(false)
 
     async function deleteProfile(){
         const { error } = await supabase
@@ -26,11 +30,13 @@ export default function deleteProfileForm(){
             .eq('id', profile!.uuid); // Filter by the 'id' column
 
         if (error) {
-            console.log("error")
             toast.error("error deleting profile")
         } else {
             console.log("success")
-            toast.success("successfully deleted profile");
+            
+            toast.success("successfully deleted profile")
+            setIsNavigating(true)
+            router.push('/dashboard')
         }
     }
 
@@ -46,10 +52,11 @@ export default function deleteProfileForm(){
             <Input onChange={(input) => setInput(input.target.value)}/>
             <Button 
                 variant={input == profile?.name ? "destructive" : "default"} 
-                disabled={input == profile?.name ? false : true} 
-                className="hover:cursor-pointer"
+                disabled={(input == profile?.name ? false : true) || (isNavigating)} 
+                className={input == profile?.name ? "hover:cursor-pointer" : "hover:cursor-not-allowed"} 
                 onClick={() => deleteProfile()}
             >
+                {isNavigating && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                 delete forever
             </Button>
         </DialogContent>

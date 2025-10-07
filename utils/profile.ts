@@ -83,22 +83,18 @@ export function hasProfile(): boolean {
   return getCurrentProfile() !== null
 }
 
-// React hook for components to subscribe to profile changes
 import { useEffect, useState } from 'react'
 
 export function useCurrentProfile(): Profile | null {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
   
   useEffect(() => {
-    // Initialize with current profile
     setCurrentProfile(getCurrentProfile())
     
-    // Subscribe to profile changes
     const unsubscribe = onProfileChange((profile) => {
       setCurrentProfile(profile)
     })
     
-    // Cleanup subscription on unmount
     return unsubscribe
   }, [])
   
