@@ -21,7 +21,7 @@ export default function deleteProfileForm(){
     const [input, setInput] = useState("")
     const supabase = createClient()
     const router = useRouter()
-    const [isNavigating, setIsNavigating] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
     async function deleteProfile(){
         const { error } = await supabase
@@ -35,8 +35,8 @@ export default function deleteProfileForm(){
             console.log("success")
             
             toast.success("successfully deleted profile")
-            setIsNavigating(true)
-            router.push('/dashboard')
+            setIsRefreshing(true)
+            window.location.reload()
         }
     }
 
@@ -52,11 +52,11 @@ export default function deleteProfileForm(){
             <Input onChange={(input) => setInput(input.target.value)}/>
             <Button 
                 variant={input == profile?.name ? "destructive" : "default"} 
-                disabled={(input == profile?.name ? false : true) || (isNavigating)} 
+                disabled={(input == profile?.name ? false : true) || (isRefreshing)} 
                 className={input == profile?.name ? "hover:cursor-pointer" : "hover:cursor-not-allowed"} 
                 onClick={() => deleteProfile()}
             >
-                {isNavigating && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+                {isRefreshing && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                 delete forever
             </Button>
         </DialogContent>

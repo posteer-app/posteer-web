@@ -6,9 +6,35 @@ export interface Profile {
 }
 
 const PROFILE_STORAGE_KEY = 'current_profile'
-
 type ProfileChangeListener = (profile: Profile | null) => void
 const profileChangeListeners: ProfileChangeListener[] = []
+
+let hasValidatedOnLoad = false
+
+async function validateProfileOnLoad() {
+  if (hasValidatedOnLoad || typeof window === 'undefined') return
+  hasValidatedOnLoad = true
+  
+  const localProfile = getCurrentProfile()
+  if (!localProfile) return
+  
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', localProfile.uuid)
+    .single()
+  
+  if (error || !data) {
+    localStorage.removeItem(PROFILE_STORAGE_KEY)
+    notifyProfileChange(null)
+  }
+}
+
+if (typeof window !== 'undefined') {
+  validateProfileOnLoad()
+}
+
 
 export function onProfileChange(listener: ProfileChangeListener): () => void {
   profileChangeListeners.push(listener)
