@@ -18,6 +18,12 @@ async function validateProfileOnLoad() {
   const localProfile = getCurrentProfile()
   if (!localProfile) return
   
+  try {
+    document.cookie = `current_profile=${JSON.stringify(localProfile)}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
+  } catch (error) {
+    console.error('Error syncing profile to cookie:', error)
+  }
+  
   const supabase = createClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -27,6 +33,10 @@ async function validateProfileOnLoad() {
   
   if (error || !data) {
     localStorage.removeItem(PROFILE_STORAGE_KEY)
+
+    if (typeof document !== 'undefined') {
+      document.cookie = 'current_profile=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    }
     notifyProfileChange(null)
   }
 }
@@ -99,14 +109,32 @@ export function setCurrentProfile(profile: Profile): void {
   
   try {
     localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile))
+    document.cookie = `current_profile=${JSON.stringify(profile)}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
+    
     notifyProfileChange(profile)
   } catch (error) {
-    console.error('Error saving current profile to localStorage:', error)
+    console.error('Error saving current profile:', error)
   }
 }
 
 export function hasProfile(): boolean {
   return getCurrentProfile() !== null
+}
+
+export function clearCurrentProfile(): void {
+  if (typeof window === 'undefined') {
+    return // SSR safety
+  }
+  
+  try {
+    localStorage.removeItem(PROFILE_STORAGE_KEY)
+    
+    document.cookie = 'current_profile=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    
+    notifyProfileChange(null)
+  } catch (error) {
+    console.error('Error clearing current profile:', error)
+  }
 }
 
 import { useEffect, useState } from 'react'
