@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/popover"
 import { setCurrentProfile, Profile, useCurrentProfile } from "@/utils/profile"
 import NewProfileDialog from "./newProfileDialog"
+import { useRouter } from "next/navigation"
 
 interface ComboboxProps {
   profiles?: Profile[]
@@ -28,6 +29,7 @@ interface ComboboxProps {
 
 export function Combobox({ profiles }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
+  const router = useRouter()
   const [newProfileDialogOpen, setNewProfileDialogOpen] = React.useState(false)
   const currentProfile = useCurrentProfile()
   const selectedUuid = currentProfile?.uuid || ""
@@ -38,6 +40,7 @@ export function Combobox({ profiles }: ComboboxProps) {
       setCurrentProfile(profile)
     }
     setOpen(false)
+    router.refresh()
   }
 
   return (

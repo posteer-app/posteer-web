@@ -19,12 +19,13 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
-export default function deleteProfileForm(){
+export default function DeleteProfileForm(){
     const profile = useCurrentProfile()
     const [input, setInput] = useState("")
     const supabase = createClient()
     const router = useRouter()
     const [isRefreshing, setIsRefreshing] = useState(false)
+    const [open, setOpen] = useState<boolean>(false)
 
     async function deleteProfile(){
         setIsRefreshing(true)
@@ -43,13 +44,14 @@ export default function deleteProfileForm(){
             clearCurrentProfile()
             
             toast.success("successfully deleted profile")
-            router.refresh()
-            setIsRefreshing(false)
+            window.location.reload()
+            // setIsRefreshing(false)
+            // setOpen(!open)
         }
     }
 
     return(
-        <Dialog>
+        <Dialog open={open} onOpenChange={() => setOpen(!open)}>
             <DialogTrigger asChild>
                 <Button variant="destructive" className="w-full">
                 <Trash2 className="h-4 w-4 mr-2" />

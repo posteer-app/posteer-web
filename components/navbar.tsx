@@ -42,8 +42,9 @@ export default function Navbar() {
       try {
         const profiles = await getProfiles()
         setProfileOptions(profiles)
-      } catch (err: any) {
-        toast.error('Error fetching profiles: ' + err.message)
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+        toast.error('Error fetching profiles: ' + errorMessage)
       }
     }
     
