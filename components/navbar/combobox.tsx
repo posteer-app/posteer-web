@@ -20,8 +20,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { setCurrentProfile, Profile, useCurrentProfile } from "@/utils/profile"
-import NewProfileDialog from "./newProfileDialog"
 import { useRouter } from "next/navigation"
+import CreateProfileDialog from "./createProfileForm"
 
 interface ComboboxProps {
   profiles?: Profile[]
@@ -45,7 +45,7 @@ export function Combobox({ profiles }: ComboboxProps) {
 
   return (
     <>
-      <NewProfileDialog open={newProfileDialogOpen} setOpen={setNewProfileDialogOpen}/>
+      <CreateProfileDialog open={newProfileDialogOpen} setOpen={setNewProfileDialogOpen}/>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

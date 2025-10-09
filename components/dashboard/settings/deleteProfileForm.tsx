@@ -16,14 +16,13 @@ import { useCurrentProfile, clearCurrentProfile } from "@/utils/profile"
 import { createClient } from "@/utils/supabase/client"
 import { Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 export default function DeleteProfileForm(){
     const profile = useCurrentProfile()
     const [input, setInput] = useState("")
     const supabase = createClient()
-    const router = useRouter()
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [open, setOpen] = useState<boolean>(false)
 
@@ -45,10 +44,17 @@ export default function DeleteProfileForm(){
             
             toast.success("successfully deleted profile")
             window.location.reload()
-            // setIsRefreshing(false)
-            // setOpen(!open)
         }
     }
+
+    useEffect(() => {
+        if(open && !profile) {
+            setOpen(false)
+            toast.error("no profile selected")
+        }
+    }, [open])
+
+    // todo: make this a real form
 
     return(
         <Dialog open={open} onOpenChange={() => setOpen(!open)}>
