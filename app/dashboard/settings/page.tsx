@@ -48,8 +48,16 @@ export default async function SettingsPage() {
                         )}
                       </div>
                     </div>
-                    <Button variant={social.connected ? "outline" : "default"} size="sm">
-                      {social.connected ? "Disconnect" : "Connect"}
+                    <Button
+                      variant={social.connected ? "outline" : "default"}
+                      size="sm"
+                      asChild={!social.connected}
+                    >
+                      {social.connected ? (
+                        "Disconnect"
+                      ) : (
+                        <a href="/api/oauth/initiate/yt">Connect</a>
+                      )}
                     </Button>
                   </div>
                 ))}
