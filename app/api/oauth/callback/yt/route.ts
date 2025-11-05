@@ -12,12 +12,21 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error('OAuth Error:', error)
-    return NextResponse.json({ error: 'OAuth authorization failed' }, { status: 400 })
+    const errorDescription = searchParams.get('error_description')
+    const redirectUrl = new URL('/auth/oauth-error', request.url)
+    redirectUrl.searchParams.set('error', error)
+    if (errorDescription) {
+      redirectUrl.searchParams.set('error_description', errorDescription)
+    }
+    return NextResponse.redirect(redirectUrl)
   }
 
   if (!code) {
     console.error('No authorization code received')
-    return NextResponse.json({ error: 'No authorization code received' }, { status: 400 })
+    const redirectUrl = new URL('/auth/oauth-error', request.url)
+    redirectUrl.searchParams.set('error', 'server_error')
+    redirectUrl.searchParams.set('error_description', 'No authorization code received from Google')
+    return NextResponse.redirect(redirectUrl)
   }
 
   try {
@@ -34,6 +43,16 @@ export async function GET(request: NextRequest) {
 
     // Exchange authorization code for tokens
     const { tokens } = await oauth2Client.getToken(code)
+
+    if(!(
+      tokens.scope?.includes("youtube.readonly") &&
+      tokens.scope?.includes("youtube.upload") &&
+      tokens.scope?.includes("youtube.force-ssl")
+    )) {
+      const redirectUrl = new URL('/auth/oauth-error', request.url)
+      redirectUrl.searchParams.set('error', 'invalid_scope')
+      return NextResponse.redirect(redirectUrl)
+    }
     
     console.log('=== OAuth Tokens Received ===')
     console.log('Access Token:', tokens.access_token)
@@ -76,9 +95,9 @@ export async function GET(request: NextRequest) {
     console.error('=== OAuth Token Exchange Error ===')
     console.error('Error:', error)
     
-    return NextResponse.json({
-      error: 'Failed to exchange authorization code for tokens',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+    const redirectUrl = new URL('/auth/oauth-error', request.url)
+    redirectUrl.searchParams.set('error', 'server_error')
+    redirectUrl.searchParams.set('error_description', 'Failed to exchange authorization code for tokens. This may be due to insufficient permissions or an expired authorization code.')
+    return NextResponse.redirect(redirectUrl)
   }
 }

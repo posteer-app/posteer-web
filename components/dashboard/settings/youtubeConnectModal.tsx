@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Icons } from '@/components/ui/icons'
+import { getCurrentProfile } from '@/utils/profile'
 import { useState } from 'react'
 
 interface YouTubeConnectModalProps {
@@ -17,6 +18,7 @@ interface YouTubeConnectModalProps {
 }
 
 export default function YouTubeConnectModal({ connected }: YouTubeConnectModalProps) {
+  const profile = getCurrentProfile()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleConnect = () => {
@@ -40,14 +42,14 @@ export default function YouTubeConnectModal({ connected }: YouTubeConnectModalPr
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="p-4 border border-red-200 rounded-lg bg-red-50 dark:bg-red-950/20">
+          <div className="p-4 border border-destructive/20 dark:border-destructive/40 rounded-lg bg-destructive/10 dark:bg-destructive/10">
             <div className="flex gap-3">
-              <Icons.alertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <Icons.alertTriangle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium mb-2 text-red-800 dark:text-red-400">
+                <h4 className="font-medium mb-2 text-destructive">
                   Important: Connect the correct Google account.
                 </h4>
-                <p className="text-sm text-red-700 dark:text-red-300">
+                <p className="text-sm text-destructive/80">
                   You must connect the Google account that owns the YouTube channel you want to manage.
                   If you have multiple Google accounts, make sure you're signed into the correct one before proceeding.
                 </p>
@@ -80,7 +82,7 @@ export default function YouTubeConnectModal({ connected }: YouTubeConnectModalPr
             ) : (
               <Icons.google className="mr-2 h-4 w-4" />
             )}
-            Connect with Google
+            Connect with Google to '{profile?.name}'
           </Button>
         </div>
       </DialogContent>
