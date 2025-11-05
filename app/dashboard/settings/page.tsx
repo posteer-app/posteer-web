@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import DeleteProfileForm from '@/components/dashboard/settings/deleteProfileForm'
+import YouTubeConnectModal from '@/components/dashboard/settings/youtubeConnectModal'
 
 export default async function SettingsPage() {
   const currentProfile = await getCurrentProfileServer()
@@ -36,7 +37,7 @@ export default async function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { name: 'Google (youtube)', icon: Icons.google, connected: false, handle: '' },
+                  { name: 'YouTube (google)', icon: Icons.google, connected: false, handle: '' },
                 ].map((social) => (
                   <div key={social.name} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
@@ -48,17 +49,7 @@ export default async function SettingsPage() {
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant={social.connected ? "outline" : "default"}
-                      size="sm"
-                      asChild={!social.connected}
-                    >
-                      {social.connected ? (
-                        "Disconnect"
-                      ) : (
-                        <a href="/api/oauth/initiate/yt">Connect</a>
-                      )}
-                    </Button>
+                    <YouTubeConnectModal connected={social.connected} />
                   </div>
                 ))}
               </CardContent>
