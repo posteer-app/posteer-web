@@ -22,7 +22,7 @@ export async function getCurrentProfileServer(): Promise<Profile | null> {
     }
     
     return {
-      uuid: profile.id,
+      uuid: profile.uuid,
       name: profile.name
     }
   } catch (error) {

@@ -29,9 +29,14 @@ function OAuthErrorContent() {
           title: 'Server Error',
           description: 'There was a problem processing your authorization.'
         }
+      case 'no_profile':
+        return {
+          title: 'No Profile Selected',
+          description: 'Please select a profile before connecting YouTube.'
+        }
       default:
         return {
-          title: 'Connection Failed',
+          title: error ? `error: ${error}` : 'Connection Failed',
           description: errorDescription || 'Unable to connect your YouTube account.'
         }
     }
