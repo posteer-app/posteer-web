@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { Icons } from '@/components/ui/icons'
 import { getCurrentProfileServer } from '@/utils/profile-server'
+import { checkYouTubeConnection } from '@/utils/youtube'
 import {
   Dialog,
   DialogTrigger,
@@ -14,6 +15,7 @@ import YouTubeConnectModal from '@/components/dashboard/settings/youtubeConnectM
 
 export default async function SettingsPage() {
   const currentProfile = await getCurrentProfileServer()
+  const isYouTubeConnected = currentProfile ? await checkYouTubeConnection(currentProfile.uuid) : false
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-muted/60">
@@ -37,7 +39,7 @@ export default async function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { name: 'YouTube (google)', icon: Icons.google, connected: false, handle: '' },
+                  { name: 'YouTube (google)', icon: Icons.google, connected: isYouTubeConnected, handle: '' },
                 ].map((social) => (
                   <div key={social.name} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">

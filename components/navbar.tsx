@@ -79,6 +79,16 @@ export default function Navbar() {
                 Dashboard
               </Link>
             </div>
+          ) : user && pathname === "/dashboard/settings" ? (
+            <>
+              <Combobox profiles={profileOptions} />
+              <Link
+                href="/dashboard"
+                className="px-3 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Dashboard
+              </Link>
+            </>
           ) : (
             <>
               <Combobox profiles={profileOptions} />
