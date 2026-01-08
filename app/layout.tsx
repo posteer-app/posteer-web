@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/navbar";
+import type { Metadata } from "next"
+import { Suspense } from "react"
+import { Geist, Geist_Mono } from "next/font/google"
+import "./globals.css"
+import Navbar from "@/components/navbar"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "sonner"
+import ToastHandler from "@/components/toast-handler"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "posteer",
-  description: "steer your business' socials in one place",
+  description: "steer your profile's socials in one place",
 };
 
 export default function RootLayout({
@@ -37,6 +40,10 @@ export default function RootLayout({
           <div className="fixed inset-0 bg-gradient-to-br from-background via-muted/30 to-muted/60 -z-10" />
           <Navbar />
           {children}
+          <Toaster />
+          <Suspense fallback={null}>
+            <ToastHandler />
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>

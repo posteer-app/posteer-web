@@ -13,36 +13,43 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
+import { Combobox } from './navbar/combobox'
+import { toast } from "sonner"
+import { getProfiles, Profile } from '@/utils/profile'
 
 export default function Navbar() {
   const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null)
+  const [profileOptions, setProfileOptions] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   
   useEffect(() => {
     const supabase = createClient()
     
-    // Get initial user
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setLoading(false)
+      
+      if (user) {
+        await fetchUserProfiles()
+      }
+    }
+    
+    const fetchUserProfiles = async () => {
+      try {
+        const profiles = await getProfiles()
+        setProfileOptions(profiles)
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+        toast.error('Error fetching profiles: ' + errorMessage)
+      }
     }
     
     getUser()
-    
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-    
-    return () => subscription.unsubscribe()
   }, [])
-  
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
@@ -63,7 +70,7 @@ export default function Navbar() {
               <span className='mb-[0.1rem]'>posteer</span>
             </Link>
           </Button>
-          {(user && !pathname?.includes("dashboard")) && (
+          {(user && !pathname?.includes("dashboard")) ? (
             <div className="flex items-center space-x-2">
               <Link
                 href="/dashboard"
@@ -72,6 +79,25 @@ export default function Navbar() {
                 Dashboard
               </Link>
             </div>
+          ) : user && pathname === "/dashboard/settings" ? (
+            <>
+              <Combobox profiles={profileOptions} />
+              <Link
+                href="/dashboard"
+                className="px-3 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Dashboard
+              </Link>
+            </>
+          ) : (
+            <>
+              <Combobox profiles={profileOptions} />
+              <Button variant="outline" size="icon" asChild>
+                <Link href="/dashboard/settings">
+                  <Icons.settings className="h-4 w-4" />
+                </Link>
+              </Button>
+            </>
           )}
         </div>
         <div className="flex items-center space-x-3">
