@@ -1,12 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { google } from 'googleapis'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const origin = new URL(request.url).origin
+    const redirectUri = `${origin}/api/oauth/callback/yt`
+    
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_API_CLIENT_ID,
       process.env.GOOGLE_API_CLIENT_SECRET,
-      process.env.GOOGLE_API_REDIRECT_URI
+      redirectUri
     )
 
     const scopes = [
