@@ -1,24 +1,30 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 
 import { createClient } from '@/utils/supabase/server'
 
+async function getBaseUrl() {
+  const headersList = await headers()
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000'
+  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1')
+  const protocol = isLocalhost ? 'http' : (headersList.get('x-forwarded-proto') || 'https')
+  return `${protocol}://${host}`
+}
+
 export async function magicLinkLogin(formData: FormData) {
   const supabase = await createClient()
+  const baseUrl = await getBaseUrl()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email') as string,
-    origin: formData.get('origin') as string,
   }
 
   const { error } = await supabase.auth.signInWithOtp({
     email: data.email,
     options: {
-      emailRedirectTo: `${data.origin}/auth/google-callback`,
+      emailRedirectTo: `${baseUrl}/auth/google-callback`,
     },
   })
 
@@ -29,13 +35,14 @@ export async function magicLinkLogin(formData: FormData) {
   redirect('/auth/magic-link-sent')
 }
 
-export async function googleLogin(origin: string) {
+export async function googleLogin() {
   const supabase = await createClient()
+  const baseUrl = await getBaseUrl()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${origin}/auth/google-callback`,
+      redirectTo: `${baseUrl}/auth/google-callback`,
     },
   })
 

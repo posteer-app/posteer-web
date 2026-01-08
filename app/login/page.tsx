@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
 import { useFormStatus } from "react-dom"
 
 import { cn } from "@/lib/utils"
@@ -14,17 +13,10 @@ import { magicLinkLogin, googleLogin, facebookLogin } from "./actions"
 export default function LoginPage() {
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false)
   const [isFacebookLoading, setIsFacebookLoading] = React.useState<boolean>(false)
-  const [origin, setOrigin] = React.useState<string>('')
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setOrigin(window.location.origin)
-    }
-  }, []);
 
   async function onGoogleSignIn() {
     setIsGoogleLoading(true)
-    googleLogin(window.location.origin)
+    googleLogin()
   }
 
   async function onFacebookSignIn() {
@@ -56,13 +48,6 @@ export default function LoginPage() {
                     placeholder="me@example.com"
                     required
                     disabled={isGoogleLoading || isFacebookLoading}
-                  />
-                  <Input
-                    name="origin"
-                    id="origin"
-                    value={origin}
-                    className="hidden"
-                    readOnly
                   />
                 </div>
                 <MagicLinkButton />
